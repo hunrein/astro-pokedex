@@ -76,32 +76,31 @@ import { Image } from "astro:assets";
 
 </MainLayout>
 
-<script is:inline define:vars={{name , id}}>
+<script define:vars={{name , id}}>
 
-    const hadlePageLoad = ( ) => {
+    const handleFavoriteClick = () => {
+        const heartOutline = document.querySelector('#heart-outline');
+        const heartFull = document.querySelector('#heart-full');
+        if(!heartOutline || !heartFull) return;
 
-      /*   let favoritePokemons: FavoritePokemon[] = JSON.parse(
-            localStorage.getItem('favoritePokemons') || '[]'
-        ); */
-        
+        heartOutline.classList.toggle('hidden');
+        heartFull.classList.toggle('hidden');
+
+        if(heartOutline.classList.contains('hidden')){
+            console.log(`Agregaste a ${name} a favoritos`);
+        }else{
+            console.log(`Quitaste a ${name} de favoritos`);
+        }
+    };
+
+    const hadlePageLoad = () => {
         const btnFavorite = document.querySelector('#btn-favorite');
         if(!btnFavorite) return;
-        const heartOutline = btnFavorite.querySelector('#heart-outline');
-        const heartFull = btnFavorite.querySelector('#heart-full');
-        
-        btnFavorite.addEventListener('click' , ()=>{
-            heartOutline.classList.toggle('hidden');
-            heartFull.classList.toggle('hidden');
-    
-            if(heartOutline.classList.contains('hidden')){
-                console.log(`Agregaste a ${name} a favoritos`);
-                // Aquí podrías agregar lógica para guardar en localStorage o en una base de datos
-            }else{
-                console.log(`Quitaste a ${name} de favoritos`);
-                // Aquí podrías agregar lógica para eliminar de favoritos
-            }
-        });
 
+        // Elimina listeners previos
+        btnFavorite.replaceWith(btnFavorite.cloneNode(true));
+        const newBtnFavorite = document.querySelector('#btn-favorite');
+        newBtnFavorite.addEventListener('click', handleFavoriteClick);
     };
 
     document.addEventListener('astro:page-load', hadlePageLoad);
